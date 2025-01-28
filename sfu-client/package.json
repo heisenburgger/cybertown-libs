@@ -1,0 +1,17 @@
+{
+  "name": "sfu-client",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && vite build",
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.0",
+    "prettier": "^3.4.2",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.5"
+  },
+  "dependencies": {
+    "mediasoup-client": "^3.8.1"
+  }
+}
