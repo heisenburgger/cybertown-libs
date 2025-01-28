@@ -188,6 +188,12 @@ export class SFU extends EventTarget {
   private onProduce(transport: Transport) {
     transport.on("produce", (data, callback, errback) => {
       const producerKey = crypto.randomUUID();
+
+      this.produceEventCallbacks[producerKey] = {
+        callback,
+        errback,
+      };
+
       const event = new CustomEvent<ProduceTransport>("produce", {
         detail: {
           rtpParameters: data.rtpParameters,
@@ -195,10 +201,6 @@ export class SFU extends EventTarget {
         },
       });
       this.dispatchEvent(event);
-      this.produceEventCallbacks[producerKey] = {
-        callback,
-        errback,
-      };
     });
   }
 }
