@@ -16,9 +16,8 @@ import {
   SFUConsumer,
   ProducerAppData,
 } from "./types";
-import { TypedEventTarget } from "./TypedEventTarget";
 
-export class SFU extends TypedEventTarget {
+export class SFU extends EventTarget {
   private static instance: SFU | null = null;
 
   private device: Device | null = null;
