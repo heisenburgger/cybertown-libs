@@ -16,8 +16,11 @@ import {
   SFUConsumer,
   ProducerAppData,
 } from "./types";
+import { TypedEventTarget } from "./TypedEventTarget";
 
-export class SFU extends EventTarget {
+export class SFU extends TypedEventTarget {
+  private static instance: SFU | null = null;
+
   private device: Device | null = null;
   private transports: Transports = {};
 
@@ -25,6 +28,13 @@ export class SFU extends EventTarget {
   private consumers: Record<string, SFUConsumer> = {};
 
   private produceEventCallbacks: Record<string, ProduceEventCallback> = {};
+
+  public static getInstance(): SFU {
+    if (this.instance === null) {
+      this.instance = new SFU();
+    }
+    return this.instance;
+  }
 
   public async init(options: InitOptions): Promise<RtpCapabilities> {
     this.device = new Device();
