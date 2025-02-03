@@ -106,7 +106,7 @@ export class Participant {
   }
 
   closeProducers(producerIDs: string[]): string[] {
-    const closedProducers = [];
+    const closedProducers: string[] = [];
     for (const producerID of producerIDs) {
       const producer = this.producers[producerID];
       if (!producer) {
@@ -122,7 +122,7 @@ export class Participant {
   }
 
   closeConsumers(consumerIDs: string[]): string[] {
-    const closedConsumers = [];
+    const closedConsumers: string[] = [];
     for (const consumerID of consumerIDs) {
       const consumer = this.consumers[consumerID];
       if (!consumer) {
@@ -155,13 +155,13 @@ export class Participant {
     producer.close();
 
     for (const participant of Object.values(this.room.participants)) {
-      const closedConsumers = [];
-      for (const consumer of Object.values(participant.consumers)) {
-        if (consumer.producerId !== producer.id) {
+      const closedConsumers: string[] = [];
+      for (const producer of Object.values(participant.producers)) {
+        if (producer.id !== producer.id) {
           continue;
         }
-        consumer.close();
-        closedConsumers.push(consumer.id);
+        producer.close();
+        closedConsumers.push(producer.id);
       }
       for (const consumerID of closedConsumers) {
         delete participant.consumers[consumerID];

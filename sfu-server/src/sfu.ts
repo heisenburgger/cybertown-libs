@@ -11,15 +11,15 @@ import {
 import { Participant } from "./participant.js";
 
 export class SFU {
-  workerIdx = 0;
-  workers: Worker[] = [];
+  private workerIdx = 0;
+  private workers: Worker[] = [];
 
   // maps worker pid to router
-  routers: Record<string, Router> = {};
+  private routers: Record<string, Router> = {};
 
-  rooms: Record<number, Room> = {};
+  private rooms: Record<number, Room> = {};
 
-  options: InitOptions;
+  private options: InitOptions;
 
   constructor(options: InitOptions) {
     this.options = options;
