@@ -7,6 +7,7 @@ import {
   RtpParameters,
   WebRtcServerOptions,
   WebRtcTransport,
+  WebRtcTransportOptions,
   WorkerSettings,
 } from "mediasoup/node/lib/types.js";
 import { Participant } from "./participant.js";
@@ -61,5 +62,5 @@ export type ProduceOptions = {};
 export type InitOptions = {
   workerSettings: WorkerSettings;
   routerOptions: RouterOptions;
-  transportOptions: WebRtcServerOptions;
+  transportOptions: WebRtcTransportOptions;
 };
