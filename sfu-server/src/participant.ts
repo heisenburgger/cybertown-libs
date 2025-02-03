@@ -151,6 +151,10 @@ export class Participant {
     }
   }
 
+  getTransports() {
+    return this.transports;
+  }
+
   private closeProducer(producer: SFUProducer) {
     producer.close();
 
