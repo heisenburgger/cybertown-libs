@@ -13,12 +13,20 @@ interface StateEventTarget extends EventTarget {
   ): void;
   addEventListener(
     type: string,
-    callback: EventListenerOrEventListenerObject | null,
-    options?: EventListenerOptions | boolean,
+    listener: EventListenerOrEventListenerObject | null,
+    options?: boolean | AddEventListenerOptions,
   ): void;
 }
 
-export const TypedEventTarget = EventTarget as {
-  new (): StateEventTarget;
-  prototype: StateEventTarget;
-};
+export class TypedEventTarget extends EventTarget implements StateEventTarget {
+  addEventListener<K extends keyof StateEventMap>(
+    type: K | string,
+    listener:
+      | ((ev: StateEventMap[K]) => void)
+      | EventListenerOrEventListenerObject
+      | null,
+    options?: boolean | AddEventListenerOptions,
+  ): void {
+    super.addEventListener(type as string, listener as EventListener, options);
+  }
+}
