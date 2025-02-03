@@ -27,6 +27,7 @@ export type ConnectTransport = {
 export type ProduceTransport = {
   rtpParameters: RtpParameters;
   producerKey: string;
+  source: TrackSource;
 };
 
 export type ProduceEventCallback = {

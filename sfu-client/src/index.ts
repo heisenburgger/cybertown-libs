@@ -14,6 +14,7 @@ import {
   InitOptions,
   SFUProducer,
   SFUConsumer,
+  ProducerAppData,
 } from "./types";
 import { TypedEventTarget } from "./TypedEventTarget";
 
@@ -197,6 +198,7 @@ export class SFU extends TypedEventTarget {
         detail: {
           rtpParameters: data.rtpParameters,
           producerKey,
+          source: (data.appData as ProducerAppData).source,
         },
       });
       this.dispatchEvent(event);
