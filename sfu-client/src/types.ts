@@ -1,9 +1,11 @@
-import type {
-  Transport,
-  DtlsParameters,
-  TransportOptions,
-  RtpParameters,
-  RtpCapabilities,
+import {
+  type Transport,
+  type DtlsParameters,
+  type TransportOptions,
+  type RtpParameters,
+  type RtpCapabilities,
+  Producer,
+  Consumer,
 } from "mediasoup-client/lib/types";
 
 export type Transports = {
@@ -48,3 +50,5 @@ export type ConsumerAppData = {
 };
 
 export type TransportDirection = "send" | "recv";
+export type SFUProducer = Producer<ProducerAppData>;
+export type SFUConsumer = Consumer<ConsumerAppData>;

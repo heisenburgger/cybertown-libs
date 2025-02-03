@@ -1,7 +1,5 @@
 import type {
-  Producer,
   Transport,
-  Consumer,
   RtpCapabilities,
   RtpParameters,
 } from "mediasoup-client/lib/types";
@@ -11,21 +9,22 @@ import {
   ProduceTransport,
   ConnectTransport,
   ProduceEventCallback,
-  ProducerAppData,
-  ConsumerAppData,
   TrackSource,
   TransportDirection,
   InitOptions,
+  SFUProducer,
+  SFUConsumer,
 } from "./types";
+import { TypedEventTarget } from "./TypedEventTarget";
 
-export class SFU extends EventTarget {
+export class SFU extends TypedEventTarget {
   private static instance: SFU | null = null;
 
   private device: Device | null = null;
   private transports: Transports = {};
 
-  private producers: Record<string, Producer<ProducerAppData>> = {};
-  private consumers: Record<string, Consumer<ConsumerAppData>> = {};
+  private producers: Record<string, SFUProducer> = {};
+  private consumers: Record<string, SFUConsumer> = {};
 
   private produceEventCallbacks: Record<string, ProduceEventCallback> = {};
 
@@ -63,7 +62,7 @@ export class SFU extends EventTarget {
   public async produce(
     source: TrackSource,
     track: MediaStreamTrack,
-  ): Promise<Producer> {
+  ): Promise<SFUProducer> {
     if (!this.transports?.send) {
       throw new Error("send transport must be setup to produce");
     }
@@ -83,7 +82,7 @@ export class SFU extends EventTarget {
     source: TrackSource,
     userID: string,
     rtpParameters: RtpParameters,
-  ): Promise<Consumer> {
+  ): Promise<SFUConsumer> {
     if (!this.transports?.recv) {
       throw new Error("receive transport must be setup to consume");
     }
@@ -136,7 +135,7 @@ export class SFU extends EventTarget {
     }
   }
 
-  closeProducers(callback: (producer: Producer) => boolean): string[] {
+  closeProducers(callback: (producer: SFUProducer) => boolean): string[] {
     const producersToDelete = [];
     for (const producer of Object.values(this.producers)) {
       if (!callback(producer)) {
@@ -151,7 +150,7 @@ export class SFU extends EventTarget {
     return producersToDelete;
   }
 
-  closeConsumers(callback: (consumer: Consumer) => boolean): string[] {
+  closeConsumers(callback: (consumer: SFUConsumer) => boolean): string[] {
     const consumersToDelete = [];
     for (const consumer of Object.values(this.consumers)) {
       if (!callback(consumer)) {
