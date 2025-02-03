@@ -64,7 +64,7 @@ export class Participant {
   async consume(sourceFilter: string, participant: Participant) {
     const transport = this.transports.recv;
 
-    const producers = Object.values(participant.consumers).filter((producer) =>
+    const producers = Object.values(participant.producers).filter((producer) =>
       producer.appData.source.includes(sourceFilter),
     );
 
@@ -156,12 +156,12 @@ export class Participant {
 
     for (const participant of Object.values(this.room.participants)) {
       const closedConsumers: string[] = [];
-      for (const producer of Object.values(participant.producers)) {
-        if (producer.id !== producer.id) {
+      for (const consumer of Object.values(participant.consumers)) {
+        if (producer.id !== consumer.producerId) {
           continue;
         }
-        producer.close();
-        closedConsumers.push(producer.id);
+        consumer.close();
+        closedConsumers.push(consumer.id);
       }
       for (const consumerID of closedConsumers) {
         delete participant.consumers[consumerID];
