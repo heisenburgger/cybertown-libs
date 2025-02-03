@@ -227,6 +227,14 @@ export class SFU {
     return room.participants[participantID];
   }
 
+  async getRTPCapabilities(roomID: number) {
+    const room = this.rooms[roomID];
+    if (!room) {
+      return;
+    }
+    return room.router.rtpCapabilities;
+  }
+
   private async createTransport(room: Room) {
     return room.router.createWebRtcTransport(this.options.transportOptions);
   }
