@@ -13,19 +13,15 @@ import {
 } from "./types.js";
 
 export class Participant {
-  private id: string;
-
-  private transports: {
+  id: string;
+  transports: {
     send: WebRtcTransport;
     recv: WebRtcTransport;
   };
-
-  private room: Room;
-
-  private consumers: Record<string, SFUConsumer> = {};
-  private producers: Record<string, SFUProducer> = {};
-
-  private rtpCapabilities: RtpCapabilities | null = null;
+  room: Room;
+  consumers: Record<string, SFUConsumer> = {};
+  producers: Record<string, SFUProducer> = {};
+  rtpCapabilities: RtpCapabilities | null = null;
 
   constructor(id: string, transports: Transports, room: Room) {
     this.id = id;
@@ -39,10 +35,6 @@ export class Participant {
   ) {
     const transport = this.transports[direction];
     transport.connect({ dtlsParameters });
-  }
-
-  setRTPCapabilities(rtpCapabilities: RtpCapabilities) {
-    this.rtpCapabilities = rtpCapabilities;
   }
 
   async produce(source: TrackSource, rtpParameters: RtpParameters) {
@@ -73,7 +65,7 @@ export class Participant {
     for (const producer of producers) {
       const canConsume = this.room.router.canConsume({
         producerId: producer.id,
-        rtpCapabilities: participant.rtpCapabilities!,
+        rtpCapabilities: this.rtpCapabilities!,
       });
       if (!canConsume) {
         console.log(
@@ -83,8 +75,9 @@ export class Participant {
       }
 
       const consumer = await transport.consume({
+        paused: true,
         producerId: producer.id,
-        rtpCapabilities: participant.rtpCapabilities!,
+        rtpCapabilities: this.rtpCapabilities!,
         appData: {
           source: producer.appData.source,
           participantID: participant.id,
@@ -97,7 +90,7 @@ export class Participant {
     return consumers;
   }
 
-  resumeConsumer(consumerID: string) {
+  async resumeConsumer(consumerID: string) {
     const consumer = this.consumers[consumerID];
     if (!consumer) {
       return;
@@ -149,10 +142,6 @@ export class Participant {
     for (const transport of Object.values(this.transports)) {
       transport.close();
     }
-  }
-
-  getTransports() {
-    return this.transports;
   }
 
   private closeProducer(producer: SFUProducer) {

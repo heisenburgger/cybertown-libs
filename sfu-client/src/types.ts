@@ -6,6 +6,7 @@ import {
   type RtpCapabilities,
   Producer,
   Consumer,
+  MediaKind,
 } from "mediasoup-client/lib/types";
 
 export type Transports = {
@@ -47,9 +48,17 @@ export type ProducerAppData = {
 
 export type ConsumerAppData = {
   source: TrackSource;
-  userID: string;
+  participantID: string;
 };
 
 export type TransportDirection = "send" | "recv";
 export type SFUProducer = Producer<ProducerAppData>;
 export type SFUConsumer = Consumer<ConsumerAppData>;
+
+export type ConsumeOptions = {
+  id: string;
+  participantID: string;
+  rtpParameters: RtpParameters;
+  producerID: string;
+  kind: MediaKind;
+};

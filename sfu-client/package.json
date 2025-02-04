@@ -1,6 +1,6 @@
 {
   "name": "@cybertown/sfu-client",
-  "version": "0.0.10",
+  "version": "0.0.19",
   "type": "module",
   "files": [
     "dist"
@@ -8,12 +8,6 @@
   "main": "./dist/sfu-client.umd.cjs",
   "module": "./dist/sfu-client.js",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/sfu-client.js",
-      "require": "./dist/sfu-client.umd.cjs"
-    }
-  },
   "scripts": {
     "build": "tsc && vite build",
     "prepublishOnly": "npm run build"

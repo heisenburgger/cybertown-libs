@@ -1,8 +1,4 @@
-import type {
-  Transport,
-  RtpCapabilities,
-  RtpParameters,
-} from "mediasoup-client/lib/types";
+import type { Transport, RtpCapabilities } from "mediasoup-client/lib/types";
 import { Device } from "mediasoup-client";
 import {
   Transports,
@@ -15,26 +11,18 @@ import {
   SFUProducer,
   SFUConsumer,
   ProducerAppData,
+  ConsumeOptions,
 } from "./types";
 import { TypedEventTarget } from "./TypedEventTarget";
 
 export class SFU extends TypedEventTarget {
-  private static instance: SFU | null = null;
+  device: Device | null = null;
+  transports: Transports = {};
 
-  private device: Device | null = null;
-  private transports: Transports = {};
+  producers: Record<string, SFUProducer> = {};
+  consumers: Record<string, SFUConsumer> = {};
 
-  private producers: Record<string, SFUProducer> = {};
-  private consumers: Record<string, SFUConsumer> = {};
-
-  private produceEventCallbacks: Record<string, ProduceEventCallback> = {};
-
-  public static getInstance(): SFU {
-    if (this.instance === null) {
-      this.instance = new SFU();
-    }
-    return this.instance;
-  }
+  produceEventCallbacks: Record<string, ProduceEventCallback> = {};
 
   public async init(options: InitOptions): Promise<RtpCapabilities> {
     this.device = new Device();
@@ -51,7 +39,7 @@ export class SFU extends TypedEventTarget {
     }
 
     if (options.recvTransportOptions) {
-      this.transports.recv = this.device.createSendTransport(
+      this.transports.recv = this.device.createRecvTransport(
         options.recvTransportOptions,
       );
       this.onConnect("recv", this.transports.recv);
@@ -81,18 +69,20 @@ export class SFU extends TypedEventTarget {
 
   public async consume(
     source: TrackSource,
-    userID: string,
-    rtpParameters: RtpParameters,
+    options: ConsumeOptions,
   ): Promise<SFUConsumer> {
     if (!this.transports?.recv) {
       throw new Error("receive transport must be setup to consume");
     }
 
     const consumer = await this.transports.recv.consume({
-      rtpParameters,
+      id: options.id,
+      rtpParameters: options.rtpParameters,
+      producerId: options.producerID,
+      kind: options.kind,
       appData: {
         source,
-        userID,
+        participantID: options.participantID,
       },
     });
     this.consumers[consumer.id] = consumer;

@@ -77,7 +77,7 @@ export class SFU {
     return participant;
   }
 
-  async removeParticipant(id: string, roomID: number) {
+  removeParticipant(id: string, roomID: number) {
     const room = this.rooms[roomID];
     if (!room) {
       return;
@@ -93,7 +93,7 @@ export class SFU {
     delete room.participants[id];
   }
 
-  async connectTransport(
+  connectTransport(
     participantID: string,
     roomID: number,
     options: ConnectTransportOptions,
@@ -158,11 +158,7 @@ export class SFU {
     return consumers;
   }
 
-  async closeProducers(
-    participantID: string,
-    roomID: number,
-    producerIDs: string[],
-  ) {
+  closeProducers(participantID: string, roomID: number, producerIDs: string[]) {
     const room = this.rooms[roomID];
     if (!room) {
       return;
@@ -174,11 +170,7 @@ export class SFU {
     participant.closeProducers(producerIDs);
   }
 
-  async closeConsumers(
-    participantID: string,
-    roomID: number,
-    consumerIDs: string[],
-  ) {
+  closeConsumers(participantID: string, roomID: number, consumerIDs: string[]) {
     const room = this.rooms[roomID];
     if (!room) {
       return;
@@ -190,11 +182,7 @@ export class SFU {
     participant.closeConsumers(consumerIDs);
   }
 
-  async resumeConsumer(
-    participantID: string,
-    roomID: number,
-    consumerID: string,
-  ) {
+  resumeConsumer(participantID: string, roomID: number, consumerID: string) {
     const room = this.rooms[roomID];
     if (!room) {
       return;
@@ -206,7 +194,7 @@ export class SFU {
     participant.resumeConsumer(consumerID);
   }
 
-  async deleteRooms(roomIDs: number[]) {
+  deleteRooms(roomIDs: number[]) {
     for (const roomID of roomIDs) {
       const room = this.rooms[roomID];
       if (!room) {
@@ -219,7 +207,7 @@ export class SFU {
     }
   }
 
-  async getParticipant(participantID: string, roomID: number) {
+  getParticipant(participantID: string, roomID: number) {
     const room = this.rooms[roomID];
     if (!room) {
       return;
@@ -227,12 +215,20 @@ export class SFU {
     return room.participants[participantID];
   }
 
-  async getRTPCapabilities(roomID: number) {
+  getRTPCapabilities(roomID: number) {
     const room = this.rooms[roomID];
     if (!room) {
       return;
     }
     return room.router.rtpCapabilities;
+  }
+
+  getParticipants(roomID: number) {
+    const room = this.rooms[roomID];
+    if (!room) {
+      return;
+    }
+    return Object.values(room.participants);
   }
 
   private async createTransport(room: Room) {
