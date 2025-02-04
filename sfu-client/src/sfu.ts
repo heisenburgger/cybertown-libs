@@ -1,4 +1,8 @@
-import type { Transport, RtpCapabilities } from "mediasoup-client/lib/types";
+import type {
+  Transport,
+  RtpCapabilities,
+  ProducerOptions,
+} from "mediasoup-client/lib/types";
 import { Device } from "mediasoup-client";
 import {
   Transports,
@@ -24,7 +28,14 @@ export class SFU extends TypedEventTarget {
 
   produceEventCallbacks: Record<string, ProduceEventCallback> = {};
 
+  // maps track source to codecs
+  codecMap: Record<string, string> = {};
+
   public async init(options: InitOptions): Promise<RtpCapabilities> {
+    if (options.codecMap) {
+      this.codecMap = options.codecMap;
+    }
+
     this.device = new Device();
     await this.device.load({
       routerRtpCapabilities: options.routerRtpCapabilities,
@@ -56,12 +67,21 @@ export class SFU extends TypedEventTarget {
       throw new Error("send transport must be setup to produce");
     }
 
-    const producer = await this.transports.send.produce({
+    const producerOptions: ProducerOptions<ProducerAppData> = {
       track,
       appData: {
         source,
       },
+    };
+
+    const codec = this.device!.rtpCapabilities.codecs?.find((codec) => {
+      return codec.mimeType.toLowerCase() === this.codecMap[source];
     });
+    if (codec) {
+      producerOptions.codec = codec;
+    }
+
+    const producer = await this.transports.send.produce(producerOptions);
     this.producers[producer.id] = producer;
 
     return producer;

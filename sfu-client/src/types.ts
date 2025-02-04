@@ -18,6 +18,7 @@ export type InitOptions = {
   routerRtpCapabilities: RtpCapabilities;
   sendTransportOptions?: TransportOptions;
   recvTransportOptions?: TransportOptions;
+  codecMap?: Record<string, string>;
 };
 
 export type ConnectTransport = {
