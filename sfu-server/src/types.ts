@@ -54,7 +54,7 @@ export type ProduceTransportOptions = {
 
 export type ConsumeOptions = {
   sourceFilter: string;
-  remoteParticipantID: string;
+  otherParticipantID: string;
 };
 
 export type ProduceOptions = {};

@@ -56,9 +56,9 @@ export class Participant {
   async consume(sourceFilter: string, participant: Participant) {
     const transport = this.transports.recv;
 
-    const producers = Object.values(participant.producers).filter((producer) =>
-      producer.appData.source.includes(sourceFilter),
-    );
+    const producers = Object.values(participant.producers).filter((producer) => {
+      return producer.appData.source.includes(sourceFilter)
+    });
 
     const consumers: SFUConsumer[] = [];
 

@@ -146,14 +146,14 @@ export class SFU {
       return;
     }
 
-    const remoteParticipant = room.participants[options.remoteParticipantID];
-    if (!remoteParticipant) {
+    const otherParticipant = room.participants[options.otherParticipantID];
+    if (!otherParticipant) {
       return;
     }
 
     const consumers = await participant.consume(
       options.sourceFilter,
-      remoteParticipant,
+      otherParticipant,
     );
     return consumers;
   }
